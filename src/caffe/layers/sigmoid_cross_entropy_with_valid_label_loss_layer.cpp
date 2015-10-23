@@ -71,6 +71,14 @@ void SigmoidCrossEntropyWithValidLabelLossLayer<Dtype>::Backward_cpu(
     const Dtype* target = bottom[1]->cpu_data();
     Dtype* bottom_diff = bottom[0]->mutable_cpu_diff();
     caffe_sub(count, sigmoid_output_data, target, bottom_diff);
+    if (bottom.size() == 3) { // a valid label is specified
+      const Dtype* valid = bottom[2]->cpu_data();
+      for (int i = 0; i < count; i++) {
+        if (! valid[i]) {
+          bottom_diff[i] = 0;
+        }
+      }
+    }
     // Scale down gradient
     const Dtype loss_weight = top[0]->cpu_diff()[0];
     caffe_scal(count, loss_weight / num, bottom_diff);
