@@ -256,6 +256,29 @@ class ImageDataLayer : public BasePrefetchingDataLayer<Dtype> {
   int lines_id_;
 };
 
+template <typename Dtype>
+class ImageData3DPCALayer : public BasePrefetchingDataLayer<Dtype> {
+ public:
+  explicit ImageData3DPCALayer(const LayerParameter& param)
+      : BasePrefetchingDataLayer<Dtype>(param) {}
+  virtual ~ImageData3DPCALayer();
+  virtual void DataLayerSetUp(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+
+  virtual inline const char* type() const { return "ImageData3DPCA"; }
+  virtual inline int ExactNumBottomBlobs() const { return 0; }
+  virtual inline int ExactNumTopBlobs() const { return 2; }
+
+ protected:
+  shared_ptr<Caffe::RNG> prefetch_rng_;
+  virtual void ShuffleImages();
+  virtual void load_batch(Batch<Dtype>* batch);
+  virtual void load3DPCAData(const string&, const string&, int, Dtype*);
+
+  vector<std::pair<std::string, std::string> > lines_; // (impath, pcapath)
+  int lines_id_;
+};
+
 /**
  * @brief Provides data to the Net from memory.
  *
