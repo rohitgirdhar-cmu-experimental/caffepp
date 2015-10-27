@@ -47,7 +47,7 @@ void SigmoidCrossEntropyWithValidLabelLossLayer<Dtype>::Forward_cpu(
   }
   Dtype loss = 0;
   for (int i = 0; i < count; ++i) {
-    if (!valid || !valid[i]) {
+    if (!valid || valid[i]) {
       loss -= input_data[i] * (target[i] - (input_data[i] >= 0)) -
           log(1 + exp(input_data[i] - 2 * input_data[i] * (input_data[i] >= 0)));
     }
