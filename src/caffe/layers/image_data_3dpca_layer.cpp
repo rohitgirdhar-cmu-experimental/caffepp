@@ -110,8 +110,8 @@ void ImageData3DPCALayer<Dtype>::load3DPCAData(const string& pcapath, const stri
   for (int i = 0; i < pcadim; i++) {
     LOG(INFO) << output[i];
   }
-  fclose(f);
   */
+  fclose(f);
 }
 
 // This function is called on prefetch thread
